@@ -9,3 +9,6 @@ migration:
 
 migrate:
 	@bash $(PWD)/scripts/migration.sh
+
+gen_mock_repo:
+	@cd src && mockery --dir=repositories/ --output mocks/repositories --case underscore --all

@@ -9,20 +9,7 @@ import (
 
 // Module constants definition.
 const (
-	ModuleCommon        = 00
-	ModuleCampaign      = 01
-	ModuleRewardPool    = 02
-	ModulePool          = 03
-	ModuleReward        = 04
-	ModuleRedeem        = 05
-	ModuleUser          = 06
-	ModuleGroup         = 07
-	ModuleWidget        = 8
-	ModuleConfig        = 9
-	ModuleFile          = 10
-	ModuleCheckIn       = 11
-	ModuleHomePromotion = 12
-	ModuleComponent     = 13
+	ModuleCommon = 00
 )
 
 // Common module error codes definition.

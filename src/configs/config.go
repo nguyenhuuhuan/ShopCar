@@ -2,7 +2,7 @@ package configs
 
 type App struct {
 	User      string `json:"user" envconfig:"MYSQL_USER" default:"root"`
-	Pass      string `json:"pass" envconfig:"MYSQL_PASS" default:"elnino19031999"`
+	Pass      string `json:"pass" envconfig:"MYSQL_PASS"`
 	Database  string `json:"database" envconfig:"MYSQL_DB" default:"shop_car"`
 	Port      string `json:"port" envconfig:"MYSQL_PORT" default:"3306"`
 	Host      string `json:"host" envconfig:"MYSQl_HOST" default:"localhost"`
