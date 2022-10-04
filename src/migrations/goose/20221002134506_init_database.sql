@@ -6,15 +6,16 @@ CREATE table users
     email           varchar(50) NOT NULL,
     password        varchar(50) NOT NULL,
     full_name       varchar(50) DEFAULT NULL,
+    phone_number    varchar(50) DEFAULT NULL,
     dob             varchar(50) DEFAULT NULL,
-    provider        enum('FACEBOOK', 'GOOGLE', 'NORMAL') DEFAULT 'NORMAL',
+    provider        varchar(50) NOT NULL,
     status          enum('ACTIVE', 'INACTIVE') NOT NULL,
     created_at 		timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at 		timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(id)
 );
 
-CREATE table roles
+CREATE table user_role
 (
     id 		        bigint(20) unsigned NOT NULL AUTO_INCREMENT,
     user_id         bigint(20) unsigned NOT NULL,
@@ -24,11 +25,12 @@ CREATE table roles
     PRIMARY KEY(id)
 );
 
-CREATE table user_role
+CREATE table roles
 (
     id 		        bigint(20) unsigned NOT NULL AUTO_INCREMENT,
     role_name       varchar(50) NOT NULL,
     status          enum('ACTIVE', 'INACTIVE') NOT NULL,
+    code            varchar(50) DEFAULT NULL,
     created_at 		timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at 		timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(id)

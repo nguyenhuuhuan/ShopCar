@@ -10,23 +10,28 @@ import (
 // Module constants definition.
 const (
 	ModuleCommon = 00
+	ModuleUser   = 01
 )
 
 // Common module error codes definition.
 var (
-	InvalidRequestError = fmtErrorCode(http.StatusBadRequest, ModuleCommon, 1)
-	FileTemplateError   = fmtErrorCode(http.StatusBadRequest, ModuleCommon, 3)
-	RequestTimeoutError = fmtErrorCode(http.StatusBadRequest, ModuleCommon, 4)
-	DuplicateError      = fmtErrorCode(http.StatusBadRequest, ModuleCommon, 6)
-	CustomMessageError  = fmtErrorCode(http.StatusBadRequest, ModuleCommon, 7)
-
-	UnauthorizedCodeError = fmtErrorCode(http.StatusUnauthorized, ModuleCommon, 1)
+	InvalidRequestError    = fmtErrorCode(http.StatusBadRequest, ModuleCommon, 1)
+	FileTemplateError      = fmtErrorCode(http.StatusBadRequest, ModuleCommon, 3)
+	RequestTimeoutError    = fmtErrorCode(http.StatusBadRequest, ModuleCommon, 4)
+	CustomMessageError     = fmtErrorCode(http.StatusBadRequest, ModuleCommon, 5)
+	UnsupportedEntityError = fmtErrorCode(http.StatusBadRequest, ModuleCommon, 6)
+	UnauthorizedCodeError  = fmtErrorCode(http.StatusUnauthorized, ModuleCommon, 1)
 
 	ForbiddenError = fmtErrorCode(http.StatusForbidden, ModuleCommon, 1)
 
 	InternalServerError      = fmtErrorCode(http.StatusInternalServerError, ModuleCommon, 1)
 	InternalMissingMetaError = fmtErrorCode(http.StatusInternalServerError, ModuleCommon, 2)
 	ErrNoResponse            = fmtErrorCode(http.StatusInternalServerError, ModuleCommon, 3)
+)
+
+// User
+var (
+	DuplicateError = fmtErrorCode(http.StatusBadRequest, ModuleUser, 1)
 )
 
 type (

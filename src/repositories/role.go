@@ -5,48 +5,36 @@ import (
 	"context"
 	"errors"
 	"gorm.io/gorm"
-	"log"
 )
 
-type UserRepository interface {
-	Create(ctx context.Context, user models.User) error
-	GetByID(ctx context.Context, id int64) (*models.User, error)
-	IsDuplicateEmail(ctx context.Context, email, username string) bool
+type RoleRepository interface {
+	Create(ctx context.Context, role *models.Role) error
+	GetByID(ctx context.Context, id int64) (*models.Role, error)
 }
 
-type userRepository struct {
+type roleRepository struct {
 	db *gorm.DB
 }
 
-func (u userRepository) IsDuplicateEmail(ctx context.Context, email, username string) bool {
-	err := u.db.WithContext(ctx).Where("email = ? or username = ?", email, username).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return false
-	}
-	return err == nil
-}
-
-func (u userRepository) Create(ctx context.Context, user models.User) error {
-	err := u.db.WithContext(ctx).Create(&user).Error
-	if err != nil {
-		log.Printf("[UserRepo] Create user is failed %v: ", err)
+func (r roleRepository) Create(ctx context.Context, role *models.Role) error {
+	err := r.db.WithContext(ctx).Create(&role).Error
+	if errors.Is(err, gorm.ErrInvalidDB) {
 		return err
 	}
 	return nil
 }
 
-func (u userRepository) GetByID(ctx context.Context, id int64) (*models.User, error) {
-	var user *models.User
-	err := u.db.WithContext(ctx).Where("id = ?", id).First(&user).Error
-	if err != nil {
-		log.Printf("[UserRepo] Create user is failed %v: ", err)
+func (r roleRepository) GetByID(ctx context.Context, id int64) (*models.Role, error) {
+	var role *models.Role
+	err := r.db.WithContext(ctx).Where("id = ?", id).First(&role, 1).Error
+	if errors.Is(err, gorm.ErrInvalidDB) {
 		return nil, err
 	}
-	return user, nil
+	return role, nil
 }
 
-func NewUserRepository(db *gorm.DB) UserRepository {
-	return &userRepository{
+func NewRoleRepository(db *gorm.DB) RoleRepository {
+	return &roleRepository{
 		db: db,
 	}
 }
