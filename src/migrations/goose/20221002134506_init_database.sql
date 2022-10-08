@@ -4,7 +4,7 @@ CREATE table users
     id 		        bigint(20) unsigned NOT NULL AUTO_INCREMENT,
     username        varchar(50) DEFAULT NULL,
     email           varchar(50) NOT NULL,
-    password        varchar(50) NOT NULL,
+    password        varchar(100) NOT NULL,
     full_name       varchar(50) DEFAULT NULL,
     phone_number    varchar(50) DEFAULT NULL,
     dob             varchar(50) DEFAULT NULL,
@@ -15,7 +15,7 @@ CREATE table users
     PRIMARY KEY(id)
 );
 
-CREATE table user_role
+CREATE table user_roles
 (
     id 		        bigint(20) unsigned NOT NULL AUTO_INCREMENT,
     user_id         bigint(20) unsigned NOT NULL,
@@ -38,4 +38,4 @@ CREATE table roles
 -- +goose Down
 DROP table users;
 DROP table roles;
-DROP table user_role;
+DROP table user_roles;

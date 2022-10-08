@@ -13,7 +13,7 @@ import (
 )
 
 type RoleService interface {
-	Create(ctx context.Context, role *dtos.Role) (*dtos.CreateRoleResponse, error)
+	Create(ctx context.Context, role *dtos.CreateRoleRequest) (*dtos.CreateRoleResponse, error)
 	GetByID(ctx context.Context, id int64) (*dtos.GetRoleResponse, error)
 }
 
@@ -21,27 +21,36 @@ type roleService struct {
 	roleRepo repositories.RoleRepository
 }
 
-func (r roleService) Create(ctx context.Context, data *dtos.Role) (*dtos.CreateRoleResponse, error) {
-	var role models.Role
+func (r roleService) Create(ctx context.Context, req *dtos.CreateRoleRequest) (*dtos.CreateRoleResponse, error) {
+	var (
+		role models.Role
+		data dtos.Role
+	)
 	err := utils.ValidateData(role)
 	if err != nil {
 		fmt.Errorf("[RoleService][Create] Role is invalid")
 		return nil, errors.New(errors.UnsupportedEntityError)
 	}
 
-	_ = copier.Copy(&role, data)
+	if checkExistRole := r.roleRepo.IsExistRoleAndCode(ctx, req.RoleName, req.Code); checkExistRole {
+		fmt.Errorf("[RoleService][Create] Role or Code is exists")
+		return nil, errors.New(errors.RoleIsExistedError)
+
+	}
+	_ = copier.Copy(&role, req)
 	err = r.roleRepo.Create(ctx, &role)
 	if err != nil {
 		fmt.Errorf("[RoleService][Create] error Create Role %v ", err)
 		return nil, errors.New(errors.InternalServerError)
 	}
 
+	_ = copier.Copy(&data, role)
 	return &dtos.CreateRoleResponse{
 		Meta: &dtos.Meta{
 			Code:    http.StatusOK,
 			Message: "OK",
 		},
-		Data: data,
+		Data: &data,
 	}, nil
 }
 

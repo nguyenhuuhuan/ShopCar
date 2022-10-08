@@ -2,13 +2,11 @@ package main
 
 import (
 	"Improve/src/configs"
-	"Improve/src/controllers"
-	"Improve/src/repositories"
-	"Improve/src/services"
+	"Improve/src/logger"
+	"Improve/src/routers"
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
 	_ "github.com/go-sql-driver/mysql"
 	"gorm.io/driver/mysql"
@@ -20,10 +18,10 @@ import (
 func main() {
 
 	config, _ := configs.New()
-	formatDsn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local", config.User, config.Pass, config.Host, config.Port, config.Database)
+	formatDsn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local", config.MYSQLUser, config.MYSQLPass, config.MYSQLHost, config.MYSQLPort, config.MYSQLDatabase)
 	db, err := sql.Open("mysql", formatDsn)
 	if err != nil {
-		log.Fatalf("Connect to database failed %v: ", err)
+		logger.Fatalf(err, "Connect to database failed %v: ", err)
 	}
 	gormDB, err := gorm.Open(mysql.New(mysql.Config{
 		Conn: db,
@@ -41,7 +39,7 @@ func main() {
 	})
 	err = rdb.Set(ctx, "key", "connect redis successfully", 10*time.Second).Err()
 	if err != nil {
-		panic(err)
+		logger.Context(ctx).Fatalf(err, "[Redis] Dial connection %v", err)
 	}
 	val, err := rdb.Get(ctx, "key").Result()
 	fmt.Println(val)
@@ -51,42 +49,10 @@ func main() {
 		rdb.Close()
 	}()
 
-	// declare Repositories
-	var (
-		userRepo     = repositories.NewUserRepository(gormDB)
-		roleRepo     = repositories.NewRoleRepository(gormDB)
-		userRoleRepo = repositories.NewUserRoleRepository(gormDB)
-	)
+	// Init Router
+	r, err := routers.InitRouter(ctx, config, gormDB)
 
-	// declare Services
-	var (
-		authService = services.NewAuthService(userRepo, roleRepo, userRoleRepo)
-		roleService = services.NewRoleService(roleRepo)
-	)
-
-	// declare Controllers
-	var (
-		authController = controllers.NewAuthController(authService)
-		roleController = controllers.NewRoleController(roleService)
-	)
-
-	r := gin.Default()
-	r.GET("/ping", func(context *gin.Context) {
-		context.JSON(200, "pong")
-	})
-	v1 := r.Group("shop-car")
-	{
-		authRouter := v1.Group("/api/auth")
-		{
-			authRouter.POST("/register", authController.Register)
-			authRouter.POST("/login", authController.Login)
-		}
-		role := v1.Group("/")
-		{
-			role.POST("role", roleController.Create)
-		}
-
+	if err := r.Run(configs.AppConfig.AddressListener()); err != nil {
+		logger.Fatalf(err, "Opening HTTP server: %v", err)
 	}
-
-	r.Run(":8080")
 }

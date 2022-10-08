@@ -1,6 +1,7 @@
 package models
 
 import (
+	"golang.org/x/crypto/bcrypt"
 	"net/mail"
 )
 
@@ -18,5 +19,17 @@ type User struct {
 
 func (u *User) validEmail(email string) bool {
 	_, err := mail.ParseAddress(email)
+	return err == nil
+}
+
+func (u User) HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+func (u *User) ComparePassword(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	if err != nil {
+		return false
+	}
 	return err == nil
 }

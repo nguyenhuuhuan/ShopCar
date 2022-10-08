@@ -5,6 +5,7 @@ import (
 	"Improve/src/errors"
 	"Improve/src/services"
 	"Improve/src/utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,10 +19,22 @@ type authController struct {
 	authService services.AuthService
 }
 
+// Register for user
+// @Title Register user
+// @Description Register user
+// @Tags ShopCar
+// @Param body body dtos.UserRegisterRequest true "data"
+// @Success 200 {object} dtos.UserRegisterResponse
+// @Failure 400 {object} errors.AppError
+// @Failure 403 {object} errors.AppError
+// @Failure 500 {object} errors.AppError
+// @Security JWTAccessToken
+// @router /auth/register [post]
 func (a *authController) Register(ctx *gin.Context) {
 	var registerReq dtos.UserRegisterRequest
 	err := ctx.ShouldBindJSON(&registerReq)
 	if err != nil {
+		fmt.Printf("[AuthController][Register] Error validate %v", err)
 		utils.HandleError(ctx, errors.New(errors.InvalidRequestError))
 		return
 	}
@@ -29,8 +42,27 @@ func (a *authController) Register(ctx *gin.Context) {
 	a.Respond(ctx, resp, err)
 }
 
+// Login user
+// @Title user Login
+// @Description user Login
+// @Tags ShopCar
+// @Param body body dtos.UserLoginRequest true "data"
+// @Success 200 {object} dtos.UserLoginResponse
+// @Failure 400 {object} errors.AppError
+// @Failure 403 {object} errors.AppError
+// @Failure 500 {object} errors.AppError
+// @Security JWTAccessToken
+// @router /auth/login [post]
 func (a authController) Login(ctx *gin.Context) {
-
+	var loginReq dtos.UserLoginRequest
+	err := ctx.ShouldBindJSON(&loginReq)
+	if err != nil {
+		fmt.Printf("[AuthController][Register] Error validate %v", err)
+		utils.HandleError(ctx, errors.New(errors.InvalidRequestError))
+		return
+	}
+	resp, err := a.authService.Login(ctx.Request.Context(), &loginReq)
+	a.Respond(ctx, resp, err)
 }
 
 func NewAuthController(authService services.AuthService) AuthController {

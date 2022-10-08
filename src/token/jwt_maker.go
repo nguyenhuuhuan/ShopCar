@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/jinzhu/copier"
 	"time"
 )
 
@@ -14,12 +15,13 @@ type JWTMaker struct {
 }
 
 func (j *JWTMaker) CreateToken(email string, duration time.Duration) (string, error) {
+	var payloadResponse PayloadResponse
 	payload, err := NewPayload(email, duration)
 	if err != nil {
 		return "", err
 	}
-
-	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
+	_ = copier.Copy(&payloadResponse, payload)
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, &payloadResponse)
 	return jwtToken.SignedString([]byte(j.secretKey))
 }
 

@@ -11,6 +11,7 @@ import (
 const (
 	ModuleCommon = 00
 	ModuleUser   = 01
+	ModuleRole   = 02
 )
 
 // Common module error codes definition.
@@ -31,7 +32,11 @@ var (
 
 // User
 var (
-	DuplicateError = fmtErrorCode(http.StatusBadRequest, ModuleUser, 1)
+	DuplicateError  = fmtErrorCode(http.StatusBadRequest, ModuleUser, 1)
+	PasswordInvalid = fmtErrorCode(http.StatusBadRequest, ModuleUser, 2)
+)
+var (
+	RoleIsExistedError = fmtErrorCode(http.StatusBadRequest, ModuleRole, 1)
 )
 
 type (

@@ -8,8 +8,9 @@ type Role struct {
 }
 
 type CreateRoleRequest struct {
-	RoleName string `json:"role_name"`
-	Status   string `json:"status" binding:"oneof=ACTIVE INACTIVE"`
+	RoleName string `json:"role_name" binding:"required"`
+	Code     string `json:"code" binding:"required"`
+	Status   string `json:"status" binding:"required,oneof=ACTIVE INACTIVE"`
 }
 type GetRoleResponse struct {
 	Meta *Meta `json:"meta"`

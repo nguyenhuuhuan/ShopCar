@@ -18,13 +18,32 @@ type Payload struct {
 	ExpiredAt time.Time `json:"expired_at"`
 }
 
-func (p *Payload) Valid() error {
+type PayloadResponse struct {
+	ID                 uuid.UUID `json:"id"`
+	Email              string    `json:"email"`
+	IssuedAtTimeStamp  int64     `json:"issued_at"`
+	ExpiredAtTimeStamp int64     `json:"expired_at"`
+}
+
+func (p *PayloadResponse) IssuedAt(IssuedAt time.Time) {
+	p.IssuedAtTimeStamp = IssuedAt.Unix()
+}
+func (p *PayloadResponse) ExpiredAt(ExpiredAt time.Time) {
+	p.ExpiredAtTimeStamp = ExpiredAt.Unix()
+}
+func (p *PayloadResponse) Valid() error {
+	expiredAt := time.Unix(p.ExpiredAtTimeStamp, 0)
+	if time.Now().After(expiredAt) {
+		return ErrExpiredToken
+	}
+	return nil
+}
+func (p Payload) Valid() error {
 	if time.Now().After(p.ExpiredAt) {
 		return ErrExpiredToken
 	}
 	return nil
 }
-
 func NewPayload(email string, duration time.Duration) (*Payload, error) {
 	tokenID, err := uuid.NewRandom()
 	if err != nil {
