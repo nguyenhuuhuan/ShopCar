@@ -2,10 +2,10 @@ package repositories
 
 import (
 	"Improve/src/errors"
+	"Improve/src/logger"
 	"Improve/src/models"
 	"context"
 	"gorm.io/gorm"
-	"log"
 )
 
 type UserRepository interface {
@@ -63,7 +63,7 @@ func (u userRepository) GetByID(ctx context.Context, id int64) (*models.User, er
 	var user *models.User
 	err := u.db.WithContext(ctx).Where("id = ?", id).First(&user).Error
 	if err != nil {
-		log.Printf("[UserRepo] Create user is failed %v: ", err)
+		logger.Context(ctx).Errorf("[UserRepo] Create user is failed %v: ", err)
 		return nil, err
 	}
 	return user, nil

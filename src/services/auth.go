@@ -4,12 +4,12 @@ import (
 	"Improve/src/configs"
 	"Improve/src/dtos"
 	"Improve/src/errors"
+	"Improve/src/logger"
 	"Improve/src/models"
 	"Improve/src/repositories"
 	"Improve/src/token"
 	"Improve/src/utils"
 	"context"
-	"fmt"
 	_ "github.com/golang-jwt/jwt/v4"
 	"github.com/jinzhu/copier"
 	"net/http"
@@ -37,18 +37,18 @@ func (a *authService) Login(ctx context.Context, req *dtos.UserLoginRequest) (*d
 	)
 	user, err := a.userRepo.GetByEmailOrUser(ctx, req.Email, req.Username)
 	if err != nil {
-		fmt.Printf("[AuthService][Register] Username or Email is invalid %v", err)
+		logger.Context(ctx).Errorf("[AuthService][Register] Username or Email is invalid %v", err)
 		return nil, errors.New(errors.InternalServerError)
 	}
 
 	if checkPassword := user.ComparePassword(req.Password, user.Password); !checkPassword {
-		fmt.Printf("[AuthService][Register] Password is invalid %v", err)
+		logger.Context(ctx).Errorf("[AuthService][Register] Password is invalid %v", err)
 		return nil, errors.New(errors.PasswordInvalid)
 	}
 
 	accessToken, err := a.tokenMaker.CreateToken(req.Email, a.app.JWT.AccessTokenDuration)
 	if err != nil {
-		fmt.Printf("[AuthService][Register] Token is invalid %v", err)
+		logger.Context(ctx).Errorf("[AuthService][Register] Token is invalid %v", err)
 		return nil, errors.New(errors.InternalServerError)
 	}
 
@@ -71,31 +71,31 @@ func (a *authService) Register(ctx context.Context, req *dtos.UserRegisterReques
 	)
 	err := utils.ValidateData(req)
 	if err != nil {
-		fmt.Printf("[AuthService][Register] User is invalid %v", err)
+		logger.Context(ctx).Errorf("[AuthService][Register] User is invalid %v", err)
 		return nil, errors.New(errors.UnsupportedEntityError)
 	}
 
 	if checkIsDuplicateEmail := a.userRepo.IsDuplicateEmail(ctx, req.Email, req.UserName); checkIsDuplicateEmail {
-		fmt.Errorf("[AuthService][Register] Email is duplicated")
+		logger.Context(ctx).Errorf("[AuthService][Register] Email is duplicated")
 		return nil, errors.New(errors.DuplicateError)
 	}
 
 	_ = copier.Copy(&user, req)
 	user.Password, err = user.HashPassword(user.Password)
 	if err != nil {
-		fmt.Errorf("[AuthService][Register] Password hash failed %v", err)
+		logger.Context(ctx).Errorf("[AuthService][Register] Password hash failed %v", err)
 		return nil, errors.New(errors.UnsupportedEntityError)
 	}
 	err = a.userRepo.Create(ctx, &user)
 	if err != nil {
-		fmt.Errorf("[AuthService][Register] error Create User %v ", err)
+		logger.Context(ctx).Errorf("[AuthService][Register] error Create User %v ", err)
 		return nil, errors.New(errors.InternalServerError)
 	}
 
 	for _, val := range req.Roles {
 		role, err := a.roleRepo.GetByID(ctx, val.ID)
 		if err != nil {
-			fmt.Errorf("[AuthService][Register] Role not found")
+			logger.Context(ctx).Errorf("[AuthService][Register] Role not found")
 			return nil, errors.New(errors.InternalServerError)
 		}
 		userRole := models.UserRole{
@@ -105,14 +105,14 @@ func (a *authService) Register(ctx context.Context, req *dtos.UserRegisterReques
 
 		err = a.userRoleRepo.Create(ctx, &userRole)
 		if err != nil {
-			fmt.Errorf("[AuthService][Register] Err Create UserRole %v ", err)
+			logger.Context(ctx).Errorf("[AuthService][Register] Err Create UserRole %v ", err)
 			return nil, errors.New(errors.InternalServerError)
 		}
 	}
 
 	token, err := a.tokenMaker.CreateToken(user.Email, a.app.JWT.AccessTokenDuration)
 	if err != nil {
-		fmt.Errorf("[AuthService][Register] Create token error %v ", err)
+		logger.Context(ctx).Errorf("[AuthService][Register] Create token error %v ", err)
 		return nil, errors.New(errors.InternalServerError)
 	}
 

@@ -3,6 +3,7 @@ package controllers
 import (
 	"Improve/src/dtos"
 	"Improve/src/errors"
+	"Improve/src/logger"
 	"Improve/src/services"
 	"Improve/src/utils"
 	"github.com/gin-gonic/gin"
@@ -32,6 +33,7 @@ func (r roleController) Create(ctx *gin.Context) {
 	var role *dtos.CreateRoleRequest
 	err := ctx.ShouldBindJSON(&role)
 	if err != nil {
+		logger.Context(ctx).Errorf("[RoleController][Create] Invalid data %v: ", err)
 		utils.HandleError(ctx, errors.New(errors.InvalidRequestError))
 		return
 	}

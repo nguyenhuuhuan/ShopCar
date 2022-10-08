@@ -3,11 +3,11 @@ package services
 import (
 	"Improve/src/dtos"
 	"Improve/src/errors"
+	"Improve/src/logger"
 	"Improve/src/models"
 	"Improve/src/repositories"
 	"Improve/src/utils"
 	"context"
-	"fmt"
 	"github.com/jinzhu/copier"
 	"net/http"
 )
@@ -28,19 +28,19 @@ func (r roleService) Create(ctx context.Context, req *dtos.CreateRoleRequest) (*
 	)
 	err := utils.ValidateData(role)
 	if err != nil {
-		fmt.Errorf("[RoleService][Create] Role is invalid")
+		logger.Context(ctx).Errorf("[RoleService][Create] Role is invalid %v: ", err)
 		return nil, errors.New(errors.UnsupportedEntityError)
 	}
 
 	if checkExistRole := r.roleRepo.IsExistRoleAndCode(ctx, req.RoleName, req.Code); checkExistRole {
-		fmt.Errorf("[RoleService][Create] Role or Code is exists")
+		logger.Context(ctx).Errorf("[RoleService][Create] Role or Code is exists")
 		return nil, errors.New(errors.RoleIsExistedError)
 
 	}
 	_ = copier.Copy(&role, req)
 	err = r.roleRepo.Create(ctx, &role)
 	if err != nil {
-		fmt.Errorf("[RoleService][Create] error Create Role %v ", err)
+		logger.Context(ctx).Errorf("[RoleService][Create] error Create Role %v: ", err)
 		return nil, errors.New(errors.InternalServerError)
 	}
 
@@ -61,7 +61,7 @@ func (r roleService) GetByID(ctx context.Context, id int64) (*dtos.GetRoleRespon
 	)
 	role, err := r.roleRepo.GetByID(ctx, id)
 	if err != nil {
-		fmt.Errorf("[RoleService][GetByID] Role not found %v: ", err)
+		logger.Context(ctx).Errorf("[RoleService][GetByID] Role not found %v: ", err)
 		return nil, err
 	}
 

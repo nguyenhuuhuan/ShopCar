@@ -3,9 +3,9 @@ package controllers
 import (
 	"Improve/src/dtos"
 	"Improve/src/errors"
+	"Improve/src/logger"
 	"Improve/src/services"
 	"Improve/src/utils"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,7 +34,7 @@ func (a *authController) Register(ctx *gin.Context) {
 	var registerReq dtos.UserRegisterRequest
 	err := ctx.ShouldBindJSON(&registerReq)
 	if err != nil {
-		fmt.Printf("[AuthController][Register] Error validate %v", err)
+		logger.Context(ctx).Errorf("[AuthController][Register] Error validate %v", err)
 		utils.HandleError(ctx, errors.New(errors.InvalidRequestError))
 		return
 	}
@@ -57,7 +57,7 @@ func (a authController) Login(ctx *gin.Context) {
 	var loginReq dtos.UserLoginRequest
 	err := ctx.ShouldBindJSON(&loginReq)
 	if err != nil {
-		fmt.Printf("[AuthController][Register] Error validate %v", err)
+		logger.Context(ctx).Errorf("[AuthController][Register] Error validate %v", err)
 		utils.HandleError(ctx, errors.New(errors.InvalidRequestError))
 		return
 	}

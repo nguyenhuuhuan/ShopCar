@@ -1,10 +1,10 @@
 package repositories
 
 import (
+	"Improve/src/logger"
 	"Improve/src/models"
 	"context"
 	"gorm.io/gorm"
-	"log"
 )
 
 type UserRoleRepository interface {
@@ -18,7 +18,7 @@ type userRoleRepository struct {
 func (u userRoleRepository) Create(ctx context.Context, userRole *models.UserRole) error {
 	err := u.db.WithContext(ctx).Create(&userRole).Error
 	if err != nil {
-		log.Printf("[UserRepo] Create userRole is failed %v: ", err)
+		logger.Context(ctx).Errorf("[UserRepo] Create userRole is failed %v: ", err)
 		return err
 	}
 	return nil
