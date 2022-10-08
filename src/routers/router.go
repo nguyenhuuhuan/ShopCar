@@ -53,12 +53,14 @@ func InitRouter(ctx context.Context, app *configs.App, db *gorm.DB) (*gin.Engine
 	var (
 		authService = services.NewAuthService(*app, maker, userRepo, roleRepo, userRoleRepo)
 		roleService = services.NewRoleService(roleRepo)
+		userService = services.NewUserService(userRepo)
 	)
 
 	// declare Controllers
 	var (
 		authController = controllers.NewAuthController(authService)
 		roleController = controllers.NewRoleController(roleService)
+		userController = controllers.NewUserController(userService)
 	)
 
 	_, err = newrelic.NewApplication(
@@ -84,6 +86,11 @@ func InitRouter(ctx context.Context, app *configs.App, db *gorm.DB) (*gin.Engine
 		role := v1.Group("/role")
 		{
 			role.POST("", roleController.Create)
+		}
+		user := v1.Group("/user")
+		{
+			user.GET("/", userController.List)
+			user.GET("/:id", userController.GetUser)
 		}
 
 	}

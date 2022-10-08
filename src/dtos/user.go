@@ -41,3 +41,24 @@ type UserLoginResponse struct {
 	Meta Meta     `json:"meta"`
 	Data UserInfo `json:"data"`
 }
+
+type ListUserRequest struct {
+	Base
+	Username    string `form:"username"`
+	Email       string `form:"email"`
+	PhoneNumber string `form:"phone_number"`
+	Status      string `form:"status"`
+	SortBy      string `form:"sort_by" binding:"omitempty,oneof=username email id"`
+	Page        int    `form:"page" binding:"omitempty,gte=0"`
+	PageSize    int    `form:"page_size" binding:"required,gte=0,max=100"`
+	Reverse     bool   `form:"reverse"`
+}
+type ListUserResponse struct {
+	Meta PaginationMeta `json:"meta"`
+	Data []User         `json:"data"`
+}
+
+type GetUserResponse struct {
+	Meta Meta `json:"meta"`
+	Data User `json:"data"`
+}
