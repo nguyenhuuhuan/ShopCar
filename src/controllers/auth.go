@@ -4,7 +4,9 @@ import (
 	"Improve/src/dtos"
 	"Improve/src/errors"
 	"Improve/src/logger"
+	"Improve/src/middlewares"
 	"Improve/src/services"
+	"Improve/src/token"
 	"Improve/src/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -32,12 +34,17 @@ type authController struct {
 // @router /auth/register [post]
 func (a *authController) Register(ctx *gin.Context) {
 	var registerReq dtos.UserRegisterRequest
+
 	err := ctx.ShouldBindJSON(&registerReq)
 	if err != nil {
 		logger.Context(ctx).Errorf("[AuthController][Register] Error validate %v", err)
 		utils.HandleError(ctx, errors.New(errors.InvalidRequestError))
 		return
 	}
+
+	authPayload := ctx.MustGet(middlewares.AuthorizationPayloadKey).(*token.PayloadResponse)
+	registerReq.Owner = authPayload.Email
+
 	resp, err := a.authService.Register(ctx.Request.Context(), &registerReq)
 	a.Respond(ctx, resp, err)
 }

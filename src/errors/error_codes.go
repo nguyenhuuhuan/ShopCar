@@ -22,8 +22,9 @@ var (
 	CustomMessageError     = fmtErrorCode(http.StatusBadRequest, ModuleCommon, 5)
 	UnsupportedEntityError = fmtErrorCode(http.StatusBadRequest, ModuleCommon, 6)
 	UnauthorizedCodeError  = fmtErrorCode(http.StatusUnauthorized, ModuleCommon, 1)
-
-	ForbiddenError = fmtErrorCode(http.StatusForbidden, ModuleCommon, 1)
+	HeaderInvalidError     = fmtErrorCode(http.StatusUnauthorized, ModuleCommon, 2)
+	HeaderNotProvideError  = fmtErrorCode(http.StatusUnauthorized, ModuleCommon, 2)
+	ForbiddenError         = fmtErrorCode(http.StatusForbidden, ModuleCommon, 1)
 
 	InternalServerError      = fmtErrorCode(http.StatusInternalServerError, ModuleCommon, 1)
 	InternalMissingMetaError = fmtErrorCode(http.StatusInternalServerError, ModuleCommon, 2)

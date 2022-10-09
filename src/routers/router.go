@@ -4,6 +4,7 @@ import (
 	"Improve/src/configs"
 	"Improve/src/controllers"
 	"Improve/src/logger"
+	"Improve/src/middlewares"
 	"Improve/src/repositories"
 	"Improve/src/services"
 	"Improve/src/token"
@@ -72,6 +73,10 @@ func InitRouter(ctx context.Context, app *configs.App, db *gorm.DB) (*gin.Engine
 		logger.Fatalf(err, "cannot start newrelic application, err : %v", err)
 	}
 
+	// middleware
+	var (
+		appAuth = middlewares.AuthMiddleware(maker)
+	)
 	r := gin.Default()
 	r.GET("/ping", func(context *gin.Context) {
 		context.JSON(200, "pong")
@@ -80,7 +85,7 @@ func InitRouter(ctx context.Context, app *configs.App, db *gorm.DB) (*gin.Engine
 	{
 		authRouter := v1.Group("/auth")
 		{
-			authRouter.POST("/register", authController.Register)
+			authRouter.POST("/register", appAuth, authController.Register)
 			authRouter.POST("/login", authController.Login)
 		}
 		role := v1.Group("/role")
@@ -89,6 +94,7 @@ func InitRouter(ctx context.Context, app *configs.App, db *gorm.DB) (*gin.Engine
 		}
 		user := v1.Group("/user")
 		{
+			user.Use(appAuth)
 			user.GET("/", userController.List)
 			user.GET("/:id", userController.GetUser)
 		}

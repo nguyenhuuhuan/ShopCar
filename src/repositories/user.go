@@ -75,8 +75,9 @@ func (u userRepository) List(ctx context.Context, req *dtos.ListUserRequest) ([]
 	}
 
 	err = query.Model(models.User{}).Count(&count).
-		Limit(int(limit)).
-		Offset(int(offset)).
+		Where("owner = ?", req.Owner).
+		Limit(limit).
+		Offset(offset).
 		Find(&listUser).Error
 
 	if err != nil {

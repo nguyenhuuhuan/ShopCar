@@ -261,6 +261,9 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "owner": {
+                    "type": "string"
+                },
                 "password": {
                     "type": "string"
                 },
@@ -334,6 +337,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "full_name": {
+                    "type": "string"
+                },
+                "owner": {
                     "type": "string"
                 },
                 "password": {

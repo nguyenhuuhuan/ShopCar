@@ -52,6 +52,7 @@ func (u *userService) GetUser(ctx context.Context, id int64) (*dtos.GetUserRespo
 		logger.Context(ctx).Errorf("[UserService][GetUser] User is not found %v", err)
 		return nil, errors.New(errors.InternalServerError)
 	}
+
 	_ = copier.Copy(&data, user)
 	return &dtos.GetUserResponse{
 		Meta: dtos.Meta{

@@ -4,6 +4,7 @@ CREATE table users
     id 		        bigint(20) unsigned NOT NULL AUTO_INCREMENT,
     username        varchar(50) DEFAULT NULL,
     email           varchar(50) NOT NULL,
+    owner           varchar(50) DEFAULT NULL,
     password        varchar(100) NOT NULL,
     full_name       varchar(50) DEFAULT NULL,
     phone_number    varchar(50) DEFAULT NULL,

@@ -9,6 +9,7 @@ type User struct {
 	Base
 	Username    string `json:"username"`
 	Email       string `json:"email" binding:"required"`
+	Owner       string `json:"owner"`
 	Password    string `json:"password" binding:"required" validate:"passwd"`
 	FullName    string `json:"full_name"`
 	PhoneNumber string `json:"phone_number"`
