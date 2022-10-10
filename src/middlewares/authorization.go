@@ -40,6 +40,7 @@ func AuthMiddleware(token token.Maker) gin.HandlerFunc {
 		accessToken := fields[1]
 		payload, err := token.VerifyToken(accessToken)
 		if err != nil {
+			logger.Context(ctx).Errorf("[authMiddleware] verify token err %v: ", err)
 			utils.HandleError(ctx, errors.New(errors.UnauthorizedCodeError))
 			return
 		}

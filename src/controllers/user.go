@@ -29,7 +29,7 @@ func (u userController) List(ctx *gin.Context) {
 		return
 	}
 
-	authPayload := ctx.MustGet(middlewares.AuthorizationPayloadKey).(*token.Payload)
+	authPayload := ctx.MustGet(middlewares.AuthorizationPayloadKey).(*token.PayloadResponse)
 	listUserReq.Owner = authPayload.Email
 
 	resp, err := u.userService.List(ctx, &listUserReq)
@@ -46,7 +46,7 @@ func (u userController) GetUser(ctx *gin.Context) {
 	}
 
 	resp, err := u.userService.GetUser(ctx, id)
-	authPayload := ctx.MustGet(middlewares.AuthorizationPayloadKey).(*token.Payload)
+	authPayload := ctx.MustGet(middlewares.AuthorizationPayloadKey).(*token.PayloadResponse)
 	if resp.Data.Email != authPayload.Email {
 		logger.Context(ctx).Errorf("[UserController][GetUser] Account doesn't belong to authenticated")
 		u.HandleError(ctx, errors.New(errors.UnauthorizedCodeError, err))

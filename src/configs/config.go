@@ -11,11 +11,11 @@ const (
 )
 
 type App struct {
-	MYSQLUser     string `json:"user" envconfig:"MYSQL_USER" default:"root"`
-	MYSQLPass     string `json:"pass" envconfig:"MYSQL_PASS"`
-	MYSQLDatabase string `json:"database" envconfig:"MYSQL_DB" default:"shop_car"`
-	MYSQLPort     string `json:"port" envconfig:"MYSQL_PORT" default:"3306"`
-	MYSQLHost     string `json:"host" envconfig:"MYSQl_HOST" default:"localhost"`
+	MYSQLUser     string `json:"mysql_user" envconfig:"MYSQL_USER" default:"root"`
+	MYSQLPass     string `json:"mysql_pass" envconfig:"MYSQL_PASS" default:"secret"`
+	MYSQLDatabase string `json:"mysql_database" envconfig:"MYSQL_DB" default:"shop_car"`
+	MYSQLPort     string `json:"mysql_port" envconfig:"MYSQL_PORT" default:"3306"`
+	MYSQLHost     string `json:"mysql_host" envconfig:"MYSQl_HOST" default:"localhost"`
 	Host          string `json:"host" envconfig:"HOST" default:"localhost"`
 	Port          string `json:"port" envconfig:"PORT" default:"8080"`
 	Env           string `json:"env" envconfig:"ENV" default:"DEV"`

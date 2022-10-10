@@ -3,6 +3,9 @@
 all:
 	build
 
+build:
+	@cd $(PWD)/src/cmd && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+
 migration:
 	@cd $(PWD)/src/migrations/goose/ && read -p "Enter migration name: " migration_name; \
 	goose create $${migration_name} sql
@@ -19,3 +22,8 @@ gen_docs:
 	@rm -rf src/main.go
 	@rm -rf src/cmd/docs
 	@mv src/docs src/cmd
+
+test:
+	@cd src && go test --cover -p 1 -v -failfast -coverprofile=src.cov `go list ./...`
+	@cd src && cat src.cov | grep -v "fake" > fine.cov
+	@cd src && go tool cover -func=fine.cov
