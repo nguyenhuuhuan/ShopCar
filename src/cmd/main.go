@@ -20,12 +20,11 @@ func main() {
 	config, _ := configs.New()
 	formatDsn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local", config.MYSQLUser, config.MYSQLPass, config.MYSQLHost, config.MYSQLPort, config.MYSQLDatabase)
 	db, err := sql.Open("mysql", formatDsn)
+	fmt.Println(formatDsn)
 	if err != nil {
 		logger.Fatalf(err, "Connect to database failed %v: ", err)
 	}
-	gormDB, err := gorm.Open(mysql.New(mysql.Config{
-		Conn: db,
-	}), &gorm.Config{})
+	gormDB, err := gorm.Open(mysql.Open(formatDsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Connect to gorm failed %v: ", err)
 	}
@@ -48,7 +47,7 @@ func main() {
 		db.Close()
 		rdb.Close()
 	}()
-
+	fmt.Println("Router")
 	// Init Router
 	r, err := routers.InitRouter(ctx, config, gormDB)
 

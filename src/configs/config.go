@@ -11,11 +11,11 @@ const (
 )
 
 type App struct {
-	MYSQLUser     string `json:"mysql_user" envconfig:"MYSQL_USER" default:"root"`
-	MYSQLPass     string `json:"mysql_pass" envconfig:"MYSQL_PASS" default:"secret"`
-	MYSQLDatabase string `json:"mysql_database" envconfig:"MYSQL_DB" default:"shop_car"`
+	MYSQLUser     string `json:"mysql_user" envconfig:"MYSQL_USER" default:"huan"`
+	MYSQLPass     string `json:"mysql_pass" envconfig:"MYSQL_PASSWORD" default:"secret"`
+	MYSQLDatabase string `json:"mysql_database" envconfig:"MYSQL_DATABASE" default:"shop_car"`
 	MYSQLPort     string `json:"mysql_port" envconfig:"MYSQL_PORT" default:"3306"`
-	MYSQLHost     string `json:"mysql_host" envconfig:"MYSQl_HOST" default:"localhost"`
+	MYSQLHost     string `json:"mysql_host" envconfig:"MYSQl_HOST" default:"bucket-database"`
 	Host          string `json:"host" envconfig:"HOST" default:"localhost"`
 	Port          string `json:"port" envconfig:"PORT" default:"8080"`
 	Env           string `json:"env" envconfig:"ENV" default:"DEV"`
@@ -24,9 +24,9 @@ type App struct {
 	JWT           JWT
 }
 type Redis struct {
-	Host         string `default:"127.0.0.1" envconfig:"REDIS_HOST"`
+	Host         string `default:"improve_cache_1" envconfig:"REDIS_HOST"`
 	Port         int    `default:"6379" envconfig:"REDIS_PORT"`
-	Password     string `default:"" envconfig:"REDIS_PASSWORD"`
+	Password     string `default:"eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81" envconfig:"REDIS_PASSWORD"`
 	Database     int    `default:"0" envconfig:"REDIS_DB"`
 	MasterName   string `default:"mymaster" envconfig:"REDIS_MASTER_NAME"`
 	PoolSize     int    `default:"2000" envconfig:"REDIS_POOL_SIZE"`
@@ -38,7 +38,7 @@ func (c *App) AddressListener() string {
 }
 
 type JWT struct {
-	SecretKey           string        `envconfig:"SECRET_KEY"`
+	SecretKey           string        `envconfig:"SECRET_KEY" default:"123456789123456789123456789123456789123456789"`
 	AccessTokenDuration time.Duration `envconfig:"ACCESS_TOKEN_DURATION"`
 }
 
