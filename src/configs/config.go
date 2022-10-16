@@ -15,8 +15,8 @@ type App struct {
 	MYSQLPass     string `json:"mysql_pass" envconfig:"MYSQL_PASSWORD" default:"secret"`
 	MYSQLDatabase string `json:"mysql_database" envconfig:"MYSQL_DATABASE" default:"shop_car"`
 	MYSQLPort     string `json:"mysql_port" envconfig:"MYSQL_PORT" default:"3306"`
-	MYSQLHost     string `json:"mysql_host" envconfig:"MYSQl_HOST" default:"bucket-database"`
-	Host          string `json:"host" envconfig:"HOST" default:"localhost"`
+	MYSQLHost     string `json:"mysql_host" envconfig:"MYSQl_HOST" default:"database-shopcar"`
+	Host          string `json:"host" envconfig:"HOST" default:"0.0.0.0"`
 	Port          string `json:"port" envconfig:"PORT" default:"8080"`
 	Env           string `json:"env" envconfig:"ENV" default:"DEV"`
 	RunMode       string `json:"run_mode" envconfig:"RUN_MODE" default:"DEBUG"`
@@ -24,7 +24,7 @@ type App struct {
 	JWT           JWT
 }
 type Redis struct {
-	Host         string `default:"improve_cache_1" envconfig:"REDIS_HOST"`
+	Host         string `default:"cache-shopcar" envconfig:"REDIS_HOST"`
 	Port         int    `default:"6379" envconfig:"REDIS_PORT"`
 	Password     string `default:"eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81" envconfig:"REDIS_PASSWORD"`
 	Database     int    `default:"0" envconfig:"REDIS_DB"`

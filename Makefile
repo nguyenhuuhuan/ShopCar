@@ -27,3 +27,11 @@ test:
 	@cd src && go test --cover -p 1 -v -failfast -coverprofile=src.cov `go list ./...`
 	@cd src && cat src.cov | grep -v "fake" > fine.cov
 	@cd src && go tool cover -func=fine.cov
+
+docker-build:
+	docker build -t shop-car:latest .
+docker-remove:
+	docker rm shop-car
+docker-run:
+	docker rm shop-car
+	docker run --name shop-car -p 8080:8080 --network improve_shopcar-network -e GIN-MODE=release shop-car:latest

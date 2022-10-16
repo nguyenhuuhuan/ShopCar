@@ -27,8 +27,10 @@ func main() {
 	gormDB, err := gorm.Open(mysql.Open(formatDsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Connect to gorm failed %v: ", err)
+	} else {
+		fmt.Println("Connect database successfully")
 	}
-
+	fmt.Println("------SHOP-CAR-------")
 	ctx := context.Background()
 
 	// connect Redis

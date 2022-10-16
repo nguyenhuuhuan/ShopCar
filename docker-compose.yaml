@@ -3,129 +3,80 @@ version: '3.8'
 services: 
 
   # MYSQL DATABASE DOCKER
-
-  bucket-mysql:
-
+  mysql:
     image: mysql:latest
-
-    container_name: bucket-database
-
+    container_name: database-shopcar
     command: --default-authentication-plugin=mysql_native_password
-
-    ports: 
-
-      - "3306:3306"
-
-    expose: 
-
+    ports:
+      - "3356:3306"
+    expose:
       - "3306"
-
-    environment: 
-
+    environment:
       MYSQL_ROOT_PASSWORD: "secret"
-
       MYSQL_USER: "huan"
-
       MYSQL_PASSWORD: "secret"
-
       MYSQL_DATABASE: "shop_car"
-
-    networks: 
-
-      - fullstack
-
-    volumes: 
-
+    networks:
+      - shopcar-network
+    volumes:
       - database_mysql:/var/lib/mysql
-
     restart: always
-
-    cap_add: 
-
+    cap_add:
       - SYS_NICE
-
-    healthcheck: 
-
+    healthcheck:
       test: ["CMD-SHELL", "echo 'select 1' |mysql -u root -p'secret' --silent"]
-
       interval: 30s
-
       timeout: 20s
-
       retries: 6
 
   cache:
     image: redis:6.2-alpine
+    container_name: cache-shopcar
     restart: always
     ports:
-      - '6379:6379'
+      - '6479:6379'
     command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
     volumes:
       - cache:/data
-  
+    networks:
+      - shopcar-network
 
 #   #API DOCKER 
 
-#   bucket:
-
-#     image: shop-car
-
-#     build: . 
-
-#     container_name: shop-car
-
-#     command: sh -c "/wait"
-
-#     environment:
-
-#       WAIT_HOSTS: bucket-mysql:3356
-
-#       WAIT_HOSTS_TIMEOUT: 300
-
-#       WAIT_SLEEP_INTERVAL: 30
-
-#       WAIT_HOST_CONNECT_TIMEOUT: 30
-
-#       MYSQL_ROOT_PASSWORD: "secret"
-
-#       MYSQL_USER: "root"
-
-#       MYSQL_PASSWORD: "secret"
-
-#       MYSQL_DATABASE: "shop_car"
-
-#       MYSQL_HOST: "172.17.0.2"
-
-#       MYSQL_PORT: "3356"
-
-#     ports: 
-
-#       - "8084:8084"
-
-#     restart: on-failure
-
-#     # volumes: 
-
-#     #   - ./src:/usr/src/app/
-
-#     depends_on: 
-
-#       - bucket-mysql
-
-#     networks: 
-
-#       - fullstack
-
-volumes: 
-
+  api:
+    build:
+      dockerfile: Dockerfile
+    container_name: shop-car
+    environment:
+       WAIT_HOSTS: mysql:3306
+       WAIT_HOSTS_TIMEOUT: 300
+       WAIT_SLEEP_INTERVAL: 30
+       WAIT_HOST_CONNECT_TIMEOUT: 30
+       MYSQL_ROOT_PASSWORD: "secret"
+       MYSQL_USER: "huan"
+       MYSQL_PASSWORD: "secret"
+       MYSQL_DATABASE: "shop_car"
+       MYSQL_HOST: "database-shopcar"
+       MYSQL_PORT: "3306"
+       REDIS_HOST: "cache-shopcar"
+       REDIS_PORT: "6379"
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    volumes:
+      - ./src:/usr/src/app/
+    depends_on:
+      - mysql
+      - cache
+    networks:
+      - shopcar-network
+    entrypoint: ["/app/wait-for.sh", "mysql:3306", "--", "/app/migration.sh"]
+    command: ["/app/main"]
+volumes:
     database_mysql:
-
     cache:
-  
 
-networks: 
-
-  fullstack:
-
+networks:
+  shopcar-network:
     driver: bridge
 
