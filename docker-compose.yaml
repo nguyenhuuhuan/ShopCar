@@ -41,10 +41,25 @@ services:
     networks:
       - shopcar-network
 
+# Migrate
+
+  migrate:
+    build:
+      dockerfile: Dockerfile-migration
+    container_name: shop-car-migration
+    volumes:
+      - migrate:/usr/src/migration
+    depends_on:
+      - mysql
+    networks:
+      - shopcar-network
+    entrypoint: ["/app/wait-for.sh", "mysql:3306", "--", "/app/migration.sh"]
+
 #   #API DOCKER 
 
   api:
     build:
+      context: .
       dockerfile: Dockerfile
     container_name: shop-car
     environment:
@@ -68,13 +83,15 @@ services:
     depends_on:
       - mysql
       - cache
+      - migrate
     networks:
       - shopcar-network
-    entrypoint: ["/app/wait-for.sh", "mysql:3306", "--", "/app/migration.sh"]
-    command: ["/app/main"]
+    entrypoint: ["/app/wait-for.sh", "mysql:3306", "--","/app/main"]
+
 volumes:
     database_mysql:
     cache:
+    migrate:
 
 networks:
   shopcar-network:

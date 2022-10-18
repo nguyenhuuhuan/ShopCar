@@ -1,8 +1,8 @@
 
 cd ${PWD}/src/migrations/goose
-MYSQL_USER="root"
-MYSQL_PASS="elnino19031999"
-MYSQL_HOST="localhost"
+MYSQL_USER="huan"
+MYSQL_PASS="secret"
+MYSQL_HOST="database-shopcar"
 MYSQL_PORT="3306"
 MYSQL_DB="shop_car"
 

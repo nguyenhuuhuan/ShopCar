@@ -1,0 +1,8 @@
+FROM gomicro/goose AS migrate
+
+WORKDIR /app
+COPY /src/migrations/goose /app/src/migrations/goose
+COPY /scripts/migration.sh .
+COPY wait-for.sh .
+
+ENTRYPOINT ["/app/migration.sh"]
