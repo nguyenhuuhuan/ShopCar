@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN cd /src/cmd && \
+RUN cd src/cmd && \
     CGO_ENABLED=0 go get -u github.com/pressly/goose/cmd/goose && \
     go build -o main main.go
 
@@ -15,7 +15,6 @@ WORKDIR /app
 
 COPY --from=builder /app/src/cmd/main .
 COPY wait-for.sh .
-
 EXPOSE 8080
 
 CMD ["/app/main", "/app/migration.sh"]
