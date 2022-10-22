@@ -42,8 +42,8 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Run migrations
-      uses: goose
       run: |
+        go install github.com/pressly/goose/v3/cmd/goose@latest
         make migrate
  
     - name: Test
