@@ -16,8 +16,10 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      postgres:
+      mysql:
         image: mysql:latest
+        container_name: database-shopcar
+        command: --default-authentication-plugin=mysql_native_password
         env:
           MYSQL_ROOT_PASSWORD: "secret"
           MYSQL_USER: "huan"
@@ -25,11 +27,18 @@ jobs:
           MYSQL_DATABASE: "shop_car"
         ports:
           - 3356:3306
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        expose:
+          - "3306"
+        volumes:
+          - database_mysql:/var/lib/mysql
+        restart: always
+        cap_add:
+          - SYS_NICE
+        healthcheck:
+          test: [ "CMD-SHELL", "echo 'select 1' |mysql -u root -p'secret' --silent" ]
+          interval: 30s
+          timeout: 20s
+          retries: 6
     steps:
 
     - name: Set up Go 1.x
