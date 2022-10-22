@@ -20,7 +20,7 @@ jobs:
         image: mysql:latest
         env:
           MYSQL_ROOT_PASSWORD: "secret"
-          MYSQL_USER: "huan"
+          MYSQL_USER: "root"
           MYSQL_PASSWORD: "secret"
           MYSQL_DATABASE: "shop_car"
         ports:
