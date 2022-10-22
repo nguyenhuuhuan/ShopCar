@@ -27,9 +27,6 @@ jobs:
           - 3356:3306
         volumes:
           - database_mysql:/var/lib/mysql
-        restart: always
-        cap_add:
-          - SYS_NICE
         healthcheck:
           test: [ "CMD-SHELL", "echo 'select 1' |mysql -u root -p'secret' --silent" ]
           interval: 30s
