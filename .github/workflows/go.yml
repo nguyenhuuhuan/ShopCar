@@ -14,19 +14,18 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:latest
-        env:
-          MYSQL_ROOT_PASSWORD: "secret"
-          MYSQL_USER: "huan"
-          MYSQL_PASSWORD: "secret"
-          MYSQL_DATABASE: "shop_car"
-        ports:
-          - 3356:3306
-        volumes:
-          - database_mysql:/var/lib/mysql
-        run: mysql -uroot -h127.0.0.1 -e 'SELECT version()'
+#    services:
+#      mysql:
+#        image: mysql:latest
+#        env:
+#          MYSQL_ROOT_PASSWORD: "secret"
+#          MYSQL_USER: "huan"
+#          MYSQL_PASSWORD: "secret"
+#          MYSQL_DATABASE: "shop_car"
+#        ports:
+#          - 3356:3306
+#        volumes:
+#          - database_mysql:/var/lib/mysql
 
 
     steps:
