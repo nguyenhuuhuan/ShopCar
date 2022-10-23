@@ -57,7 +57,7 @@ jobs:
 
     - name: Run migrations
       run: |
-        run: mysql -uroot -h127.0.0.1 -e 'CREATE database shop_car'
+        mysql -uroot -h127.0.0.1 -e 'CREATE database shop_car'
         go install github.com/pressly/goose/v3/cmd/goose@latest
         make migrate
  
