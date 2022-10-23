@@ -26,6 +26,8 @@ jobs:
           - 3356:3306
         volumes:
           - database_mysql:/var/lib/mysql
+        run: mysql -uroot -h127.0.0.1 -e 'SELECT version()'
+
 
     steps:
 
@@ -40,7 +42,6 @@ jobs:
 
     - name: Run migrations
       run: |
-        mysql -uroot -h127.0.0.1 -e 'SELECT version()'
         go install github.com/pressly/goose/v3/cmd/goose@latest
         make migrate
  
