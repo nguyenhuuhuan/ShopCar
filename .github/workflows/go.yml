@@ -52,7 +52,7 @@ jobs:
         root-password: secret
         user: huan
         password: secret
-        database: shop-car
+        database: shop_car
         run: mysql -uroot -h127.0.0.1 -e 'SELECT version()'
 
     - name: Run migrations
