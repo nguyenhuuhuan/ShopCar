@@ -1,6 +1,6 @@
 
 cd ${PWD}/src/migrations/goose
-MYSQL_USER="root"
+MYSQL_USER="huan"
 MYSQL_PASS="secret"
 MYSQL_HOST="localhost"
 MYSQL_PORT="3306"

@@ -50,7 +50,7 @@ jobs:
           max_connections=50
           local_infile=1
         root-password: secret
-        user: root
+        user: huan
         password: secret
         run: mysql -uroot -h127.0.0.1 -e 'SELECT version()'
 
