@@ -2,7 +2,7 @@
 cd ${PWD}/src/migrations/goose
 MYSQL_USER="huan"
 MYSQL_PASS="secret"
-MYSQL_HOST="0.0.0.0"
+MYSQL_HOST="localhost"
 MYSQL_PORT="3306"
 MYSQL_DB="shop_car"
 
