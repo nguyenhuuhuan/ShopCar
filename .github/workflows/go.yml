@@ -14,21 +14,6 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:latest
-        env:
-          MYSQL_ROOT_PASSWORD: "secret"
-          MYSQL_USER: "huan"
-          MYSQL_PASSWORD: "secret"
-          MYSQL_DATABASE: "shop_car"
-        ports:
-          - 3356:3306
-        volumes:
-          - database_mysql:/var/lib/mysql
-        run: mysql -uroot -h127.0.0.1 -e 'SELECT version()'
-
-
     steps:
 
     - name: Set up Go 1.x
@@ -39,6 +24,21 @@ jobs:
 
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
+
+    - name: Set up MySQL
+      uses: shogo82148/actions-setup-mysql@v1
+      with:
+        mysql-version: '8.0'
+        my-cnf: |
+          root-password=secret
+          user=root
+          password=secret
+          innodb_log_file_size=256MB
+          innodb_buffer_pool_size=512MB
+          max_allowed_packet=16MB
+          max_connections=50
+          local_infile=1
+        run: mysql -uroot -h127.0.0.1 -e 'SELECT version()'
 
     - name: Run migrations
       run: |
