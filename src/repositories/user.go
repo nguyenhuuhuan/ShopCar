@@ -38,7 +38,7 @@ func (u userRepository) List(ctx context.Context, req *dtos.ListUserRequest) ([]
 		err           error
 		query         = u.db.WithContext(ctx)
 	)
-	if req.PageSize == 0 && req.PageSize == 0 {
+	if req.Page == 0 && req.PageSize == 0 {
 		limit, offset = -1, -1
 	} else {
 		limit = req.PageSize

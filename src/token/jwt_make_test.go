@@ -22,14 +22,14 @@ func TestJWTMaker(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, token)
 
-	payload, err := maker.VerifyToken(token)
+	payloadResponse, err := maker.VerifyToken(token)
 	require.NoError(t, err)
-	require.NotEmpty(t, payload)
+	require.NotEmpty(t, payloadResponse)
 
-	require.NotZero(t, payload.ID)
-	require.Equal(t, email, payload.Email)
-	require.WithinDuration(t, issuedAt, payload.IssuedAt, time.Second)
-	require.WithinDuration(t, expiredAt, payload.ExpiredAt, time.Second)
+	require.NotZero(t, payloadResponse.ID)
+	require.Equal(t, email, payloadResponse.Email)
+	require.WithinDuration(t, issuedAt, time.Unix(payloadResponse.IssuedAtTimeStamp, 0), time.Second)
+	require.WithinDuration(t, expiredAt, time.Unix(payloadResponse.ExpiredAtTimeStamp, 0), time.Second)
 
 }
 
@@ -60,8 +60,8 @@ func TestInvalidJWTTokenAlgNone(t *testing.T) {
 	maker, err := NewJWTMaker(utils.RandomString(32))
 	require.NoError(t, err)
 
-	payload, err = maker.VerifyToken(token)
+	PayloadResponse, err := maker.VerifyToken(token)
 	require.Error(t, err)
 	require.EqualError(t, err, ErrInvalidToken.Error())
-	require.Nil(t, payload)
+	require.Nil(t, PayloadResponse)
 }
