@@ -60,8 +60,8 @@ func TestInvalidJWTTokenAlgNone(t *testing.T) {
 	maker, err := NewJWTMaker(utils.RandomString(32))
 	require.NoError(t, err)
 
-	PayloadResponse, err := maker.VerifyToken(token)
+	payloadResponse, err := maker.VerifyToken(token)
 	require.Error(t, err)
 	require.EqualError(t, err, ErrInvalidToken.Error())
-	require.Nil(t, PayloadResponse)
+	require.Nil(t, payloadResponse)
 }
